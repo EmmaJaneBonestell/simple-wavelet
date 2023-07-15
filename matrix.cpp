@@ -76,7 +76,7 @@ std::array<size_t, 2> Matrix<T>::Index2Subscripts(size_t idx) const {
   if (idx >= data_.size()) {
     throw std::out_of_range("Matrix::Index2Subscripts");
   }
-  return {{idx % num_rows_, idx / num_rows_}};
+  return {{idx / num_cols_, idx % num_cols_}};
 }
 
 template<typename T>
@@ -84,7 +84,7 @@ size_t Matrix<T>::Subscripts2Index(size_t i, size_t j) const {
   if (i >= num_rows_ || j >= num_cols_) {
     throw std::out_of_range("Matrix::Subscripts2Index");
   }
-  return j * num_rows_ + i;
+  return i * num_cols_ + j;
 }
 
 template<typename T>
@@ -124,9 +124,8 @@ void Matrix<T>::SetRow(const std::vector<T>& row, size_t i) {
   if (i >= num_rows_ || num_cols_ != row.size()) {
     throw std::invalid_argument("Matrix::SetRow");
   }
-  for (size_t j = 0; j < num_cols_; j++) {
-    operator()(i, j) = row.at(j);
-  }
+  const ptrdiff_t idx = static_cast<ptrdiff_t>(Subscripts2Index(i, 0));
+  std::copy(row.begin(), row.end(), data_.begin() + idx);
 }
 
 template<typename T>
@@ -134,8 +133,9 @@ void Matrix<T>::SetColumn(const std::vector<T>& column, size_t j) {
   if (j >= num_cols_ || num_rows_ != column.size()) {
     throw std::invalid_argument("Matrix::SetColumn");
   }
-  const ptrdiff_t idx = static_cast<ptrdiff_t>(Subscripts2Index(0, j));
-  std::copy(column.begin(), column.end(), data_.begin() + idx);
+  for (size_t i = 0; i < num_rows_; i++) {
+    operator()(i, j) = column.at(i);
+  }
 }
 
 template<typename T>
@@ -147,21 +147,21 @@ void Matrix<T>::SetData(const std::vector<T>& data) {
 }
 
 template<typename T>
-std::vector<T> Matrix<T>::GetRow(size_t i) const {
-  std::vector<T> row;
-  row.reserve(num_cols_);
-  for (size_t j = 0; j < num_cols_; j++) {
-    const T& value = operator()(i, j);
-    row.push_back(value);
-  }
-  return row;
+std::vector<T> Matrix<T>::GetRow(size_t i) const { 
+  const ptrdiff_t idx_start = static_cast<ptrdiff_t>(Subscripts2Index(i, 0));
+  const ptrdiff_t idx_end = idx_start + static_cast<ptrdiff_t>(num_cols_);
+  return std::vector<T>(data_.begin() + idx_start, data_.begin() + idx_end);
 }
 
 template<typename T>
-std::vector<T> Matrix<T>::GetColumn(size_t j) const {
-  const ptrdiff_t idx_start = static_cast<ptrdiff_t>(Subscripts2Index(0, j));
-  const ptrdiff_t idx_end = idx_start + static_cast<ptrdiff_t>(num_rows_);
-  return std::vector<T>(data_.begin() + idx_start, data_.begin() + idx_end);
+std::vector<T> Matrix<T>::GetColumn(size_t j) const { 
+  std::vector<T> column;
+  column.reserve(num_rows_);
+  for (size_t i = 0; i < num_rows_; i++) { 
+    const T& value = operator()(i, j);
+    column.push_back(value);
+  } 
+  return column;
 }
 
 template<typename T>
@@ -176,19 +176,20 @@ const std::vector<T>& Matrix<T>::GetData() const {
 
 template<typename T>
 void Matrix<T>::DeleteRow(size_t i) {
-  for (size_t j = 0; j < num_cols_; j++) {
-    const ptrdiff_t idx = static_cast<ptrdiff_t>(Subscripts2Index(i, num_cols_ - j - 1));
-    data_.erase(data_.begin() + idx);
-  }
+  const ptrdiff_t idx_start = static_cast<ptrdiff_t>(Subscripts2Index(i, 0));
+  const ptrdiff_t idx_end = static_cast<ptrdiff_t>(Subscripts2Index(i + 1, 0));
+  data_.erase(data_.begin() + idx_start, data_.begin() + idx_end);
   num_rows_--;
   assert(Numel() == data_.size());
 }
 
+
 template<typename T>
 void Matrix<T>::DeleteColumn(size_t j) {
-  const ptrdiff_t idx_start = static_cast<ptrdiff_t>(Subscripts2Index(0, j));
-  const ptrdiff_t idx_end = static_cast<ptrdiff_t>(Subscripts2Index(0, j + 1));
-  data_.erase(data_.begin() + idx_start, data_.begin() + idx_end);
+  for (size_t i = 0; i < num_rows_; i++) {
+    const ptrdiff_t idx = static_cast<ptrdiff_t>(Subscripts2Index(num_rows_ - i - 1, j));
+    data_.erase(data_.begin() + idx);
+  }
   num_cols_--;
   assert(Numel() == data_.size());
 }

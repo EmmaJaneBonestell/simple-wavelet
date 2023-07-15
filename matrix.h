@@ -25,7 +25,7 @@ struct MatrixSize : public std::array<size_t, 2> {
 
 //=============================================================================
 // Matrix
-// Simple data type that allows to represent a 2D matrix in column-major
+// Simple data type that allows to represent a 2D matrix in row-major
 // order. This class also offers several operators to manipulate the data.
 //=============================================================================
 
