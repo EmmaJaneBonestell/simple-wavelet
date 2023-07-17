@@ -7,6 +7,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include <opencv2/opencv.hpp>
+
 #include "vector.h"
 
 //=============================================================================
@@ -101,6 +103,9 @@ public:
 
   T Max() const;
   T Min() const;
+
+  void cv2sw(const cv::Mat& mat);
+  void sw2cv(cv::Mat& mat) const;
 
   //===========================================================================
   // Binary Matrix-Matrix operations

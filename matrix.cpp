@@ -298,6 +298,20 @@ T Matrix<T>::Min() const {
   return Vector::Min(data_);
 }
 
+// Function to convert from cv::Mat to Matrix
+template<typename T>
+void Matrix<T>::cv2sw(const cv::Mat& mat) {
+  std::vector<T> vec(mat.begin<T>(), mat.end<T>());
+  *this = Matrix<T>(mat.rows, mat.cols, vec);
+}
+
+// Function to convert from Matrix to cv::Mat
+template<typename T>
+void Matrix<T>::sw2cv(cv::Mat& mat) const {
+  std::vector<T> vec = this->GetData();
+  mat = cv::Mat(this->GetNumRows(), this->GetNumColumns(), CV_64F, vec.data()).clone();
+}
+
 //=============================================================================
 // Binary Matrix-Matrix operations
 //=============================================================================
@@ -395,3 +409,4 @@ Matrix<T> Matrix<T>::operator-() const {
 
 // Explicit template instantiation
 template class Matrix<double>;
+

@@ -7,6 +7,7 @@ project(simple_wavelet
 
 include(GNUInstallDirs)
 
+find_package(OpenCV REQUIRED)
 find_program(PKGCONF pkg-config)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -19,19 +20,24 @@ set_target_properties(simple_wavelet
 		POSITION_INDEPENDENT_CODE 1
 )
 
-target_include_directories(simple_wavelet PRIVATE "${PROJECT_SOURCE_DIR}")
+target_include_directories(simple_wavelet
+	PRIVATE "${PROJECT_SOURCE_DIR}"
+)
+include_directories("${OpenCV_INCLUDE_DIRS}")
 
 target_sources(simple_wavelet 
     PRIVATE matrix.cpp wavelet.cpp
 )
 
 add_executable(sw sw.cpp $<TARGET_OBJECTS:simple_wavelet>)
+target_link_libraries(sw opencv_core)
 
 add_library(simple_wavelet_shared SHARED $<TARGET_OBJECTS:simple_wavelet>)
 set_target_properties(simple_wavelet_shared
     PROPERTIES
-    PUBLIC_HEADER "matrix.h;vector.h;wavelet.cpp"
+    PUBLIC_HEADER "matrix.h;vector.h;wavelet.h"
     OUTPUT_NAME simple_wavelet
+	LINK_LIBRARY opencv_core
 )
 
 IF (WIN32)
@@ -44,7 +50,9 @@ set_target_properties(simple_wavelet_static
     PROPERTIES
     PUBLIC_HEADER "matrix.h;vector.h;wavelet.h"
     OUTPUT_NAME simple_wavelet
+	LINK_LIBRARY opencv_core
 )
+
 install(TARGETS simple_wavelet_shared simple_wavelet_static
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
