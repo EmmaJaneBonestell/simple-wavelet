@@ -188,4 +188,8 @@ private:
 
 }; // class Wavelet<T>
 
+extern template class Decomposition1D<double>;
+extern template class Decomposition2D<double>;
+extern template class Wavelet<double>;
+
 #endif // WAVELET_H

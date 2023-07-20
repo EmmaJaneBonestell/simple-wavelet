@@ -42,6 +42,7 @@ public:
 
   Matrix(size_t num_rows, size_t num_cols, T value = static_cast<T>(0));
   Matrix(size_t num_rows, size_t num_cols, const std::vector<T>& data);
+  Matrix(const cv::Mat &mat);
   Matrix();
   ~Matrix();
 
@@ -104,8 +105,7 @@ public:
   T Max() const;
   T Min() const;
 
-  void cv2sw(const cv::Mat& mat);
-  void sw2cv(cv::Mat& mat) const;
+  cv::Mat toCvMat();
 
   //===========================================================================
   // Binary Matrix-Matrix operations
@@ -158,5 +158,6 @@ inline std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {
   }
   return out;
 }
+extern template class Matrix<double>;
 
 #endif // MATRIX_H_

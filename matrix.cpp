@@ -31,6 +31,13 @@ Matrix<T>::Matrix(size_t num_rows, size_t num_cols, const std::vector<T>& data) 
 }
 
 template<typename T>
+Matrix<T>::Matrix(const cv::Mat& mat) {
+  num_rows_ = mat.rows;
+  num_cols_ = mat.cols;
+  data_.assign((T*)mat.datastart, (T*)mat.dataend);
+}
+
+template<typename T>
 Matrix<T>::Matrix() { }
 
 template<typename T>
@@ -298,18 +305,9 @@ T Matrix<T>::Min() const {
   return Vector::Min(data_);
 }
 
-// Function to convert from cv::Mat to Matrix
 template<typename T>
-void Matrix<T>::cv2sw(const cv::Mat& mat) {
-  std::vector<T> vec(mat.begin<T>(), mat.end<T>());
-  *this = Matrix<T>(mat.rows, mat.cols, vec);
-}
-
-// Function to convert from Matrix to cv::Mat
-template<typename T>
-void Matrix<T>::sw2cv(cv::Mat& mat) const {
-  std::vector<T> vec = this->GetData();
-  mat = cv::Mat(this->GetNumRows(), this->GetNumColumns(), CV_64F, vec.data()).clone();
+cv::Mat Matrix<T>::toCvMat() {
+  return cv::Mat(num_rows_, num_cols_, CV_64F, data_.data());
 }
 
 //=============================================================================
