@@ -1,7 +1,7 @@
 #include "vector.h"
 #include "wavelet.h"
 
-using namespace Vector;
+namespace SimpleWavelet {
 
 //=============================================================================
 // Decomposition1D
@@ -418,3 +418,5 @@ std::vector<T> Wavelet<T>::Wextend(const std::vector<T>& x, size_t lenEXT) const
 template class Decomposition1D<double>;
 template class Decomposition2D<double>;
 template class Wavelet<double>;
+
+}; // namespace SimpleWavelet

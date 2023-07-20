@@ -3,7 +3,7 @@
 
 #include "wavelet.h"
 
-using namespace Vector;
+using namespace SimpleWavelet;
 
 int main(int argc, const char *argv[]) {
 

@@ -9,7 +9,7 @@
 #include <ostream>
 #include <vector>
 
-namespace Vector {
+namespace SimpleWavelet {
 
   //===========================================================================
   // This header contains a definition for all the most common mathematical
@@ -321,7 +321,7 @@ namespace Vector {
     return output;
   }
 
-} // namespace Vector
+} // namespace SimpleWavelet
 
 //=============================================================================
 // Output to std::ostream

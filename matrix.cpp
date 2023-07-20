@@ -7,7 +7,7 @@
 
 #include "matrix.h"
 
-using namespace Vector;
+namespace SimpleWavelet {
 
 //=============================================================================
 // Matrix c-tors and d-tor
@@ -277,32 +277,32 @@ void Matrix<T>::Reshape(size_t num_rows, size_t num_cols) {
 
 template<typename T>
 void Matrix<T>::Round() {
-  Vector::Round(data_);
+  SimpleWavelet::Round(data_);
 }
 
 template<typename T>
 void Matrix<T>::Floor() {
-  Vector::Floor(data_);
+  SimpleWavelet::Floor(data_);
 }
 
 template<typename T>
 void Matrix<T>::Ceil() {
-  Vector::Ceil(data_);
+  SimpleWavelet::Ceil(data_);
 }
 
 template<typename T>
 void Matrix<T>::Clamp(T min_value, T max_value) {
-  Vector::Clamp(data_, min_value, max_value);
+  SimpleWavelet::Clamp(data_, min_value, max_value);
 }
 
 template<typename T>
 T Matrix<T>::Max() const {
-  return Vector::Max(data_);
+  return SimpleWavelet::Max(data_);
 }
 
 template<typename T>
 T Matrix<T>::Min() const {
-  return Vector::Min(data_);
+  return SimpleWavelet::Min(data_);
 }
 
 template<typename T>
@@ -408,3 +408,4 @@ Matrix<T> Matrix<T>::operator-() const {
 // Explicit template instantiation
 template class Matrix<double>;
 
+}; // namespace SimpleWavelet

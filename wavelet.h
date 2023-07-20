@@ -7,6 +7,8 @@
 
 #include "matrix.h"
 
+namespace SimpleWavelet {
+
 //=============================================================================
 // WaveledSubbdand
 // Type defining the 2D subbands of wavelet decompostion as enum.
@@ -191,5 +193,7 @@ private:
 extern template class Decomposition1D<double>;
 extern template class Decomposition2D<double>;
 extern template class Wavelet<double>;
+
+}; // namespace SimpleWavelet
 
 #endif // WAVELET_H

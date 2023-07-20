@@ -11,6 +11,8 @@
 
 #include "vector.h"
 
+namespace SimpleWavelet {
+
 //=============================================================================
 // MatrixSize
 //=============================================================================
@@ -158,6 +160,9 @@ inline std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {
   }
   return out;
 }
+
 extern template class Matrix<double>;
+
+}; // namespace SimpleWavelet
 
 #endif // MATRIX_H_
